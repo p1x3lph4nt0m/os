@@ -12,25 +12,22 @@ typedef struct{
 int n,m,o;
 void *prod(void* vargp){
 	MatrixData* data =(MatrixData*) vargp;
-	int** matA= data->a1;int** matB=data->a2;
-	int p=data->n1,q=data->n2,x=0;
+	int x=0;
 	for(int i=0;i<m;i++){
-		x+=matA[p][i]*matB[i][q];
+		x+=(data->a1)[data->n1][i]*(data->a2)[i][data->n2];
 	}
-	data->a3[p][q]=x;
+	data->a3[data->n1][data->n2]=x;
 	free(data);
 	pthread_exit(NULL);
 }
 int main(){
 	scanf("%d %d %d",&n,&m,&o);
-	
-	//Matrix A,B,C are of n*n order
 	int** matA=(int**)malloc(n*sizeof(int*));
 	int** matB=(int**)malloc(m*sizeof(int*));
 	int** matC=(int**)malloc(n*sizeof(int*));
 	for(int i=0;i<n;i++)matA[i]=(int*)malloc(m*sizeof(int));
 	for(int i=0;i<m;i++)matB[i]=(int*)malloc(o*sizeof(int));
-	for(int i=0;i<m;i++)matC[i]=(int*)malloc(o*sizeof(int));
+	for(int i=0;i<n;i++)matC[i]=(int*)malloc(o*sizeof(int));
 	for(int i=0;i<n;i++){
 		for(int j=0;j<m;j++){
 			scanf("%d",&matA[i][j]);
@@ -41,22 +38,20 @@ int main(){
 			scanf("%d",&matB[i][j]);
 		}
 	}
+	pthread_t th[n][o];
 	for(int i=0;i<n;i++){
 		for(int j=0;j<o;j++){
-			MatrixData* data;
-			data->n1=i,data->n2=j;
-			data->a1=matA,data->a2=matB,data->a3=matC;
-
-			pthread_t th;
-			pthread_create(&th,NULL,prod,&data);
-			pthread_join(th,NULL);
+			MatrixData *data=(MatrixData *)malloc(sizeof(MatrixData));
+			data->n1=i;data->n2=j;
+			data->a1=matA;data->a2=matB;data->a3=matC;
+			pthread_create(&th[i][j],NULL,prod,data);
 		}
 	}
-	//for(int i=0;i<n;i++){
-	//	for(int j=0;j<o;j++){
-	//		pthread_join(th,NULL);
-	//	}
-	//}
+	for(int i=0;i<n;i++){
+		for(int j=0;j<o;j++){
+			pthread_join(th[i][j],NULL);
+		}
+	}
 	for(int i=0;i<n;i++){
 		for(int j=0;j<o;j++){
 			printf("%d ",matC[i][j]);
@@ -66,7 +61,7 @@ int main(){
 	for(int i=0;i<n;i++)free(matA[i]);
 	for(int i=0;i<m;i++)free(matB[i]);
 	for(int i=0;i<n;i++)free(matC[i]);
-	free(matA),free(matB),free(matC);
+	free(matA);free(matB);free(matC);
 	return 0;
 }
 
