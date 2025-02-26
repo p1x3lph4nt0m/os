@@ -11,11 +11,11 @@ typedef struct {
     int n1;
     int n2;
 } MatrixData;
-
+int m;
 void *prod(void *vargp) {
     MatrixData *data = (MatrixData *)vargp;
     int x = 0;
-    for (int i = 0; i < data->n1; i++) {
+    for (int i = 0; i < m; i++) {
         x += (data->a1)[data->n1][i] * (data->a2)[i][data->n2];
     }
     data->a3[data->n1][data->n2] = x;
@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
     
     srand(time(NULL));
     
-    int n = atoi(argv[1]), m = atoi(argv[2]), o = atoi(argv[3]);
+    int n = atoi(argv[1]); m = atoi(argv[2]);int o = atoi(argv[3]);
     int **matA = (int **)malloc(n * sizeof(int *));
     int **matB = (int **)malloc(m * sizeof(int *));
     int **matC = (int **)malloc(n * sizeof(int *));
@@ -73,23 +73,7 @@ int main(int argc, char **argv) {
             pthread_join(th[i][j], NULL);
         }
     }
-    
-    printf("Matrix A:\n");
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            printf("%d ", matA[i][j]);
-        }
-        printf("\n");
-    }
-    
-    printf("\nMatrix B:\n");
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < o; j++) {
-            printf("%d ", matB[i][j]);
-        }
-        printf("\n");
-    }
-    
+    /*
     printf("\nResult Matrix C:\n");
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < o; j++) {
@@ -97,7 +81,7 @@ int main(int argc, char **argv) {
         }
         printf("\n");
     }
-    
+    */
     for (int i = 0; i < n; i++) free(matA[i]);
     for (int i = 0; i < m; i++) free(matB[i]);
     for (int i = 0; i < n; i++) free(matC[i]);
@@ -107,4 +91,3 @@ int main(int argc, char **argv) {
     
     return 0;
 }
-what is the meaning of this?
