@@ -35,7 +35,6 @@ void populate_matrix(int n, int m, int o, int **a1, int **a2) {
         }
     }
 }
-
 int main(int argc, char **argv) {
     if (argc != 4) {
         printf("Usage: %s <rows_A> <cols_A_rows_B> <cols_B>\n", argv[0]);
